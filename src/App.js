@@ -9,23 +9,38 @@ function App() {
 }
 
 const GrowingButton = () => {
-  // KODUNUZ BURAYA GELECEK
+  const [size, setSize] = useState(100);
+  const [growing, setGrowing] = useState(true);
 
-  const [isButtonBig, setIsButtonBig] = useState(true);
+  const maxSize = 300; // Maximum size of the button
+  const minSize = 100; // Minimum size of the button
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setSize((currentSize) => {
+        if (growing) {
+          return currentSize + 10 <= maxSize ? currentSize + 10 : maxSize;
+        } else {
+          return currentSize - 10 >= minSize ? currentSize - 10 : minSize;
+        }
+      });
+    }, 100);
+
+    return () => clearInterval(interval);
+  }, [growing]);
+
+  const toggleGrowing = () => {
+    setGrowing(!growing);
+  };
 
   return (
-    <div>
-      <button
-        className={`${isButtonBig ? "py-24" : "py-2"} ${
-          isButtonBig ? "px-36" : "px-6"
-        } ${
-          isButtonBig ? " font-extralight" : "font-bold"
-        } bg-blue-700 text-white rounded-xl flex justify-center items-center transition-all duration-300 ease-in-out max-w-[500px]`}
-        onClick={() => setIsButtonBig((pre) => !pre)}
-      >
-        {isButtonBig ? "küçült" : "BÜYÜT"}
-      </button>
-    </div>
+    <button
+      className="bg-blue-700 text-white rounded-xl flex justify-center items-center transition-all duration-300 ease-in-out"
+      style={{ padding: `${size}px ${size * 1.5}px` }}
+      onClick={toggleGrowing}
+    >
+      {growing ? "Küçült" : "Büyüt"}
+    </button>
   );
 };
 
